@@ -1,8 +1,15 @@
-import React from "react";
-import { Paper, Box, Stack, Button, Typography } from "@mui/material";
-import backgroundImage from "../assets/BannerImage.png"
+import React, { useState } from "react";
+import { Paper, Modal, Box, Stack, Button, Typography } from "@mui/material";
+import backgroundImage from "../assets/BannerImage.png";
+import RegisterUser from "../components/RegisterUser";
+import LoginForm from "../components/LoginForm";
 
-const HomePage = () => {
+const HomePage = ({setUser}) => {
+  const [openRegister, setOpenRegister] = useState(false);
+  const handleOpenRegister = () => setOpenRegister(true);
+  const [openLogin, setOpenLogin] = useState(false);
+  const handleOpenLogin = () => setOpenLogin(true);
+  
   return (
     <Paper
       sx={{
@@ -41,19 +48,23 @@ const HomePage = () => {
         }}
       >
         <Button
+          onClick={handleOpenLogin}
           variant="contained"
           color="primary"
           sx={{ mt: 1, mb: 1, width: "35%" }}
         >
           LOGIN
         </Button>
+        <LoginForm setUser={setUser} openLogin={openLogin} setOpenLogin={setOpenLogin} />
         <Button
+          onClick={handleOpenRegister}
           variant="contained"
           color="secondary"
           sx={{ mt: 1, mb: 1, width: "35%" }}
         >
           SIGNUP
         </Button>
+        <RegisterUser openRegister={openRegister} setOpenRegister={setOpenRegister} />
       </Stack>
     </Paper>
   );
