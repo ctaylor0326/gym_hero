@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
-import ExerciseDisplay from "./pages/ExerciseDisplay";
+import ExerciseDisplay from "./pages/BuildWorkoutPage";
 
 const App = () => {
   const [user, setUser] = useState(null);
