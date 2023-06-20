@@ -10,16 +10,17 @@ from flask_sqlalchemy import SQLAlchemy
 
 # Local imports
 from config import app, db, api
-from models import User
+from models import User, Workout
+
 
 class NewUser(Resource):
     def post(self):
         form = request.json
         new_user = User(
-                first_name=form.get('first_name'),
-                last_name=form.get('last_name'),
-                email=form.get('email'),
-                )
+            first_name=form.get('first_name'),
+            last_name=form.get('last_name'),
+            email=form.get('email'),
+        )
         new_user.set_password(form.get('password'))
         try:
             db.session.add(new_user)
@@ -29,7 +30,29 @@ class NewUser(Resource):
         except Exception as e:
             print(e)
             return abort(500, {"error": "Internal Server Error"})
+
+
 api.add_resource(NewUser, '/register')
+
+
+class NewWorkout(Resource):
+    def post(self):
+        form = request.json
+        new_workout = Workout(
+            workout_name=form.get('workout_name'),
+            exercises=form.get('exercises')
+        )
+        try:
+            db.session.add(new_workout)
+            db.session.commit()
+            workout_dict = new_workout.to_dict()
+            return workout_dict, 201
+        except Exception as e:
+            print(e)
+            return abort(500, {"error": "Internal Server Error"})
+
+
+api.add_resource(NewWorkout, '/workout')
 
 
 class LoginResource(Resource):
@@ -54,6 +77,7 @@ class LoginResource(Resource):
 
 api.add_resource(LoginResource, '/login')
 
+
 class CheckSession(Resource):
 
     def get(self):
@@ -62,6 +86,7 @@ class CheckSession(Resource):
             return user.to_dict()
         else:
             return {'message': '401: Not Authorized'}, 401
+
 
 api.add_resource(CheckSession, '/check_session')
 

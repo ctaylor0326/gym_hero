@@ -6,20 +6,29 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 
-export default function Exercises({ exercises }) {
+export default function Exercises({ workoutList, setWorkoutList, exercises }) {
+  const handleAddToWorkout = (exercise) => {
+    setWorkoutList([...workoutList, exercise]);
+  };
+
   const exerciseCards = exercises.map((exercise) => {
     return (
-      <Grid item>
-        <Card key={exercise} value={exercise} sx={{ maxWidth: 345 }}>
+      <Grid item xs={4} md={3} xl={2}>
+        <Card
+          key={exercise}
+          value={exercise}
+          sx={{ height: 300, maxWidth: 345 }}
+        >
           <CardActionArea>
             <CardMedia
               component="img"
               height="140"
+              width="140"
               image={exercise.gifUrl}
               alt={exercise.name}
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography gutterBottom component="div">
                 {exercise.name}
               </Typography>
               {/* <Typography variant="body2" color="text.secondary">
@@ -29,7 +38,11 @@ export default function Exercises({ exercises }) {
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button size="small" color="primary">
+            <Button
+              onClick={(e) => handleAddToWorkout(exercise)}
+              size="small"
+              color="primary"
+            >
               Add To Workout
             </Button>
           </CardActions>
@@ -38,5 +51,9 @@ export default function Exercises({ exercises }) {
     );
   });
 
-  return <Grid container>{exerciseCards}</Grid>;
+  return (
+    <Grid container px={4} rowSpacing={3} spacing={2}>
+      {exerciseCards}
+    </Grid>
+  );
 }

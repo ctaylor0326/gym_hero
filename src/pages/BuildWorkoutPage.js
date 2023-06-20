@@ -4,12 +4,15 @@ import Exercises from "../components/Exercises";
 import SearchExercises from "../components/SearchExercises";
 import ExerciseFilter from "../components/ExerciseFilter";
 import { fetchData, exerciseOptions } from "../utils/fetchData";
+import WorkoutBuilder from "../components/WorkoutBuilder";
 
 const ExerciseDisplay = () => {
   const [bodyParts, setBodyParts] = useState([]);
   const [bodyPart, setBodyPart] = useState("all");
   const [exercises, setExercises] = useState([]);
   const [equipmentList, setEquipmentList] = useState([]);
+  // const [selectedExercise, setSelectedExercise] = useState({});
+  const [workoutList, setWorkoutList] = useState([]);
 
   useEffect(() => {
     const fetchExercisesData = async () => {
@@ -35,6 +38,12 @@ const ExerciseDisplay = () => {
 
   return (
     <Box>
+      <WorkoutBuilder
+        workoutList={workoutList}
+        setWorkoutList={setWorkoutList}
+        // selectedExercise={selectedExercise}
+        // setSelectedExercise={setSelectedExercise}
+      />
       <SearchExercises
         setExercises={setExercises}
         bodyPart={bodyPart}
@@ -52,6 +61,8 @@ const ExerciseDisplay = () => {
         exercises={exercises}
         bodyPart={bodyPart}
         setBodyPart={setBodyPart}
+        setWorkoutList={setWorkoutList}
+        workoutList={workoutList}
       />
     </Box>
   );

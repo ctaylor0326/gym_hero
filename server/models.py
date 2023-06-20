@@ -9,7 +9,6 @@ from config import db
 # Models go here!
 
 
-
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
@@ -18,7 +17,6 @@ class User(db.Model, SerializerMixin):
     last_name = db.Column(db.String)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)
-    
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -27,3 +25,9 @@ class User(db.Model, SerializerMixin):
         return check_password_hash(self.password_hash, password)
 
 
+class Workout(db.Model, SerializerMixin):
+    __tablename__ = 'workouts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    workout_name = db.Column(db.String)
+    exercises = db.Column(db.String)
