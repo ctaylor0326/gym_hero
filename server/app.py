@@ -40,7 +40,8 @@ class NewWorkout(Resource):
         form = request.json
         new_workout = Workout(
             workout_name=form.get('workout_name'),
-            exercises=form.get('exercises')
+            exercises=form.get('exercises'),
+            creator=form.get('creator')
         )
         try:
             db.session.add(new_workout)
@@ -67,12 +68,20 @@ class LoginResource(Resource):
         if user and user.check_password(password):
             # Password is correct, proceed with authentication and session handling
             session['user_id'] = user.id
-            # ...
-
-            return user.to_dict()
+            response_data = {
+                'id': user.id,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email
+            }
+            response = make_response(jsonify(response_data))
+            return response
         else:
             # Invalid credentials
-            return {'message': 'Invalid email or password'}
+            response_data = {'message': 'Invalid email or password'}
+            response = make_response(jsonify(response_data))
+            response.status_code = 401
+            return response
 
 
 api.add_resource(LoginResource, '/login')
