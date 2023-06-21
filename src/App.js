@@ -9,26 +9,27 @@ import {
 
 import HomePage from "./pages/HomePage";
 import ExerciseDisplay from "./pages/BuildWorkoutPage";
+import { UserProvider } from "./context/User";
 
 const App = () => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    fetch("/check_session").then((response) => {
-      if (response.ok) {
-        response.json().then((user) => setUser(user));
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetch("/check_session").then((response) => {
+  //     if (response.ok) {
+  //       response.json().then((user) => setUser(user));
+  //     }
+  //   });
+  // }, []);
 
   // if (user) {
   return (
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<HomePage setUser={setUser} />} />
-        <Route exact path="/exercisedisplay" element={<ExerciseDisplay />} />
-      </Routes>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<HomePage />} />
+          <Route exact path="/exercisedisplay" element={<ExerciseDisplay />} />
+        </Routes>
+      </Router>
+    </UserProvider>
   );
   // } else {
   //   return (

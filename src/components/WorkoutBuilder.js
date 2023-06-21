@@ -1,9 +1,13 @@
 import { Box, Button, Typography, Icon, Stack, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { UserContext } from "../context/User";
 
 export default function WorkoutBuilder({ workoutList, setWorkoutList }) {
   const [workoutName, setWorkoutName] = useState("");
+  const { user } = useContext(UserContext);
+
+  console.log({ user });
 
   const handleDeleteExercise = (i) => {
     const newList = [...workoutList];
@@ -29,6 +33,7 @@ export default function WorkoutBuilder({ workoutList, setWorkoutList }) {
     const workoutData = {
       workout_name: workoutName,
       exercises: exerciseListById,
+      creator: user.id,
     };
 
     fetch("http://127.0.0.1:5555/workout", {

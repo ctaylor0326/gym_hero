@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/User";
 
-export default function LoginForm({ setUser, openLogin, setOpenLogin }) {
-    const handleCloseLogin = () => setOpenLogin(false);
-    const navigate = useNavigate()
-  const handleSubmit = (e) => {
+export default function LoginForm({ openLogin, setOpenLogin }) {
+  const { user, setUser } = useContext(UserContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const handleCloseLogin = () => setOpenLogin(false);
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
     e.preventDefault();
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("register-password").value;
 
     const formData = { email, password };
 
@@ -21,17 +25,24 @@ export default function LoginForm({ setUser, openLogin, setOpenLogin }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     })
-      .then((r) => {
-          if (r.ok) {
-              r.json().then((user) => {
-                  setUser(user)
-                  localStorage.setItem("user_id", user.id);
-                  navigate("/exercisedisplay")
-              });
-              
-          }
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            setUser(data);
+            console.log(user);
+            localStorage.setItem("user_id", data.id);
+            navigate("/exercisedisplay");
+          });
+        } else {
+          response.json().then((data) => {
+            setError(data.message);
+            alert("Invalid email or password!");
+            setEmail("");
+            setPassword("");
+          });
+        }
       })
-      .catch((e) => console.log(e));
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -45,17 +56,21 @@ export default function LoginForm({ setUser, openLogin, setOpenLogin }) {
         type="email"
         fullWidth
         variant="standard"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <TextField
-        id="register-password"
+        id="login-password"
         label="Password"
         type="password"
         fullWidth
         variant="standard"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <DialogActions>
         <Button onClick={handleCloseLogin}>Cancel</Button>
-        <Button onClick={handleSubmit}>Login</Button>
+        <Button onClick={handleLogin}>Login</Button>
       </DialogActions>
     </Dialog>
   );
