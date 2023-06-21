@@ -1,8 +1,10 @@
 import { Box, Button, Typography, Icon, Stack, TextField } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function WorkoutBuilder({ workoutList, setWorkoutList }) {
+  const [workoutName, setWorkoutName] = useState("");
+
   const handleDeleteExercise = (i) => {
     const newList = [...workoutList];
     newList.splice(i, 1);
@@ -11,7 +13,16 @@ export default function WorkoutBuilder({ workoutList, setWorkoutList }) {
 
   const handleCreateWorkout = (e) => {
     e.preventDefault();
-    const workoutName = document.getElementById("workout-name").value;
+
+    if (!workoutName) {
+      alert("Please enter a name for your workout!");
+      return;
+    }
+    if (workoutList.length === 0) {
+      alert("Please add exercises to your workout!");
+      return;
+    }
+
     const exerciseListById = workoutList
       .map((exercise) => exercise.id)
       .join(",");
@@ -25,13 +36,17 @@ export default function WorkoutBuilder({ workoutList, setWorkoutList }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(workoutData),
     }).then((r) => {
-      if (r.ok) alert("Workout Saved");
+      if (r.ok) {
+        alert("Workout Saved");
+        setWorkoutName("");
+        setWorkoutList([]);
+      }
     });
   };
 
   const workoutListMenu = workoutList.map((exercise, i) => {
     return (
-      <Stack>
+      <Stack key={exercise.id}>
         <Typography>{exercise.name}</Typography>
         <Button onClick={(e) => handleDeleteExercise(i)}>
           <DeleteIcon />
@@ -43,7 +58,13 @@ export default function WorkoutBuilder({ workoutList, setWorkoutList }) {
   return (
     <Box>
       {workoutListMenu}
-      <TextField id="workout-name" label="Workout Name" type="text">
+      <TextField
+        id="workout-name"
+        label="Workout Name"
+        type="text"
+        value={workoutName}
+        onChange={(e) => setWorkoutName(e.target.value)}
+      >
         Workout Name
       </TextField>
       <Button onClick={handleCreateWorkout}>Create Workout</Button>

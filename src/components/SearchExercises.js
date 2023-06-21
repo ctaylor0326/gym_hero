@@ -2,13 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { exerciseOptions, fetchData } from "../utils/fetchData";
 
-
-const SearchExercises = ({setExercises, bodyPart, setBodyPart}) => {
+const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
   const [search, setSearch] = useState("");
-
-  
-
-
 
   const handleSearch = async () => {
     if (search) {
@@ -22,7 +17,7 @@ const SearchExercises = ({setExercises, bodyPart, setBodyPart}) => {
           ((exercise) => exercise.equipment.toLowerCase().includes(search)) ||
           ((exercise) => exercise.bodypart.toLowerCase().includes(search))
       );
-      setSearch('');
+      setSearch("");
       setExercises(searchedExercises);
     }
   };
@@ -35,8 +30,8 @@ const SearchExercises = ({setExercises, bodyPart, setBodyPart}) => {
         mb="50px"
         textAlign="center"
       >
-        Awesome Exercises You <br />
-        Should Know
+        Browse Exercises Below <br />
+        And Build Your Own Workout
       </Typography>
       <Box position="relative" mb="72px">
         <TextField
@@ -73,4 +68,4 @@ const SearchExercises = ({setExercises, bodyPart, setBodyPart}) => {
   );
 };
 
-export default SearchExercises
+export default SearchExercises;
