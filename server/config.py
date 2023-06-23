@@ -7,14 +7,19 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+from dotenv import load_dotenv
+import os
 
+# Load environment variables from .env file
+load_dotenv()
+secret_key = os.getenv('SECRET_KEY')
 # Local imports
 
 # Instantiate app, set attributes
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fitness.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'jru67389fjktgjhre02'
+app.config['SECRET_KEY'] = secret_key
 
 app.json.compact = False
 
