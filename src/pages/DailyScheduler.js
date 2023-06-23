@@ -1,46 +1,57 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 import { UserContext } from "../context/User";
+import NavBar from "../components/NavBar";
 
 const DailyScheduler = () => {
   const [workouts, setWorkouts] = useState([]);
   const [selectedWorkouts, setSelectedWorkouts] = useState([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { user } = useContext(UserContext);
   console.log(user);
 
   useEffect(() => {
-    // Fetch available workouts from the backend
-    const fetchWorkouts = async () => {
-      try {
-        const response = await fetch("/workouts");
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          setWorkouts(data);
-        } else {
-          console.error("Error fetching workouts:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching workouts:", error);
-      }
-    };
-
     fetchWorkouts();
   }, []);
 
   const handleWorkoutSelection = (day, workoutId) => {
-    setSelectedWorkouts((prevSelectedWorkouts) => [
-      ...prevSelectedWorkouts,
-      {
-        workout_id: workoutId,
-        weekday: day,
-      },
-    ]);
+    const existingWorkoutIndex = selectedWorkouts.findIndex(
+      (workout) => workout.weekday === day
+    );
+
+    if (existingWorkoutIndex > -1) {
+      setSelectedWorkouts((prevSelectedWorkouts) => {
+        const updatedWorkouts = [...prevSelectedWorkouts];
+        updatedWorkouts[existingWorkoutIndex] = {
+          ...updatedWorkouts[existingWorkoutIndex],
+          workout_id: workoutId,
+        };
+        return updatedWorkouts;
+      });
+    } else {
+      setSelectedWorkouts((prevSelectedWorkouts) => [
+        ...prevSelectedWorkouts,
+        {
+          weekday: day,
+          workout_id: workoutId,
+        },
+      ]);
+    }
   };
-  console.log(selectedWorkouts);
+
   const handleAssignWorkout = async () => {
     try {
-      // Send a request to create instances of DailySchedule on the backend
       const response = await fetch("/dailyschedules", {
         method: "POST",
         headers: {
@@ -58,33 +69,99 @@ const DailyScheduler = () => {
     }
   };
 
+  const fetchWorkouts = async (fetchUserSpecific = false) => {
+    try {
+      let url = "/workouts";
+      if (fetchUserSpecific) {
+        url += `?creator=${user.id}`;
+      }
+
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        setWorkouts(data);
+      } else {
+        console.error("Error fetching workouts:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching workouts:", error);
+    }
+  };
+
+  const handlePopupOpen = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handlePopupClose = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom>
-        Daily Scheduler
-      </Typography>
-      <Box display="flex" alignItems="center" mt={2}>
-        {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day) => (
-          <Box key={day} mr={2}>
-            <Typography variant="subtitle1">{day}</Typography>
-            <Select
-              value={selectedWorkouts[day] || ""}
-              onChange={(e) => handleWorkoutSelection(day, e.target.value)}
-            >
-              <MenuItem value="">No workout</MenuItem>
-              {workouts.map((workout) => (
-                <MenuItem key={workout.id} value={workout.id}>
-                  {workout.workout_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-        ))}
+    <div>
+      <NavBar />
+      <Box>
+        <Typography variant="h5" gutterBottom>
+          Daily Scheduler
+        </Typography>
+        <Box display="flex" flexDirection="column">
+          {[
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ].map((day) => (
+            <Box key={day} display="flex" alignItems="center" mb={2}>
+              <Typography variant="subtitle1" mr={2}>
+                {day}
+              </Typography>
+              <TextField
+                variant="outlined"
+                size="small"
+                value={
+                  selectedWorkouts.find((workout) => workout.weekday === day)
+                    ?.workout_id || ""
+                }
+                disabled
+              />
+              <Button variant="outlined" onClick={handlePopupOpen} ml={2}>
+                Change
+              </Button>
+            </Box>
+          ))}
+        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAssignWorkout}
+        >
+          Assign Workouts
+        </Button>
+
+        <Dialog open={isPopupOpen} onClose={handlePopupClose}>
+          <DialogTitle>Workout Selector</DialogTitle>
+          <DialogContent>
+            <Box display="flex" justifyContent="center" mb={2}>
+              <Button variant="contained" onClick={() => fetchWorkouts(false)}>
+                All Workouts
+              </Button>
+              <Button variant="contained" onClick={() => fetchWorkouts(true)}>
+                My Workouts
+              </Button>
+            </Box>
+            {/* Display the fetched workouts here */}
+            {workouts.map((workout) => (
+              <Typography key={workout.id}>{workout.workout_name}</Typography>
+            ))}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handlePopupClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
       </Box>
-      <Button variant="contained" color="primary" onClick={handleAssignWorkout}>
-        Assign Workouts
-      </Button>
-    </Box>
+    </div>
   );
 };
 
