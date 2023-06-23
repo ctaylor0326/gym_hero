@@ -45,7 +45,7 @@ const HomePage = () => {
           color: "orange",
         }}
       >
-        Welcome to My App
+        Gym Hero
       </Typography>
       <Stack
         direction="row"

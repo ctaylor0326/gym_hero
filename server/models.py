@@ -21,6 +21,9 @@ class User(db.Model, SerializerMixin):
     workouts = association_proxy('dailyschedules', 'workout')
     dailyschedules = db.relationship('DailySchedule', backref='user')
 
+    serialize_rules = ('-dailyschedules', 'workouts',
+                       '-workouts.dailyschedules', '-password_hash')
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -38,6 +41,7 @@ class Workout(db.Model, SerializerMixin):
     dailyschedules = db.relationship(
         'DailySchedule', backref='workout', cascade="all, delete-orphan")
     users = association_proxy('dailyschedules', 'user')
+    serialize_rules = ('-dailyschedules',)
 
     def __repr__(self):
         return f'<Workout {self.workout_name}: Created by {self.creator}>'

@@ -31,7 +31,7 @@ export default function LoginForm({ openLogin, setOpenLogin }) {
             setUser(data);
             console.log(user);
             localStorage.setItem("user_id", data.id);
-            navigate("/exercisedisplay");
+            navigate("/mainmenu");
           });
         } else {
           response.json().then((data) => {
