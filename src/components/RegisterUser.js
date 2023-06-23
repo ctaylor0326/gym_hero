@@ -30,7 +30,7 @@ export default function RegisterUser({ openRegister, setOpenRegister }) {
           r.json().then((r) => {
             setUser(r);
             localStorage.setItem("user_id", r.id);
-            navigate("/exercisedisplay");
+            navigate("/mainmenu");
           });
         }
       })
