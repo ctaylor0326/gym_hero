@@ -71,6 +71,9 @@ class LogoutResource(Resource):
         return {'message': 'Logged out successfully'}
 
 
+api.add_resource(LogoutResource, '/logout')
+
+
 class CheckSession(Resource):
     def get(self):
         user = User.query.filter(User.id == session.get('user_id')).first()
@@ -85,7 +88,13 @@ api.add_resource(CheckSession, '/check_session')
 
 class Workouts(Resource):
     def get(self):
-        workouts = Workout.query.all()
+        creator = request.args.get('creator')
+
+        if creator:
+            workouts = Workout.query.filter_by(creator=creator).all()
+        else:
+            workouts = Workout.query.all()
+
         workout_list = [workout.to_dict() for workout in workouts]
         return workout_list
 
@@ -112,8 +121,6 @@ api.add_resource(Workouts, '/workouts')
 class DailySchedules(Resource):
     def post(self):
         selections = request.json
-        import ipdb
-        ipdb.set_trace()
         try:
             new_selections = []
             for form in selections:

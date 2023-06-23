@@ -5,6 +5,7 @@ import SearchExercises from "../components/SearchExercises";
 import ExerciseFilter from "../components/ExerciseFilter";
 import { fetchData, exerciseOptions } from "../utils/fetchData";
 import WorkoutBuilder from "../components/WorkoutBuilder";
+import NavBar from "../components/NavBar";
 
 const ExerciseDisplay = () => {
   const [bodyParts, setBodyParts] = useState([]);
@@ -20,7 +21,6 @@ const ExerciseDisplay = () => {
         "https://exercisedb.p.rapidapi.com/exercises/bodyPartList",
         exerciseOptions
       );
-      console.log(bodyPartsData);
       setBodyParts(["all", ...bodyPartsData]);
     };
     const fetchEquipmentData = async () => {
@@ -28,7 +28,6 @@ const ExerciseDisplay = () => {
         "https://exercisedb.p.rapidapi.com/exercises/equipmentList",
         exerciseOptions
       );
-      console.log(equipmentData);
       setEquipmentList(["all", ...equipmentData]);
     };
 
@@ -37,34 +36,37 @@ const ExerciseDisplay = () => {
   }, []);
 
   return (
-    <Box>
-      <WorkoutBuilder
-        workoutList={workoutList}
-        setWorkoutList={setWorkoutList}
-        // selectedExercise={selectedExercise}
-        // setSelectedExercise={setSelectedExercise}
-      />
-      <SearchExercises
-        setExercises={setExercises}
-        bodyPart={bodyPart}
-        setBodyPart={setBodyPart}
-        bodyParts={bodyParts}
-      />
-      <ExerciseFilter
-        setExercises={setExercises}
-        bodyPart={bodyPart}
-        setBodyPart={setBodyPart}
-        bodyParts={bodyParts}
-        equipmentList={equipmentList}
-      />
-      <Exercises
-        exercises={exercises}
-        bodyPart={bodyPart}
-        setBodyPart={setBodyPart}
-        setWorkoutList={setWorkoutList}
-        workoutList={workoutList}
-      />
-    </Box>
+    <div>
+      <NavBar />
+      <Box>
+        <WorkoutBuilder
+          workoutList={workoutList}
+          setWorkoutList={setWorkoutList}
+          // selectedExercise={selectedExercise}
+          // setSelectedExercise={setSelectedExercise}
+        />
+        <SearchExercises
+          setExercises={setExercises}
+          bodyPart={bodyPart}
+          setBodyPart={setBodyPart}
+          bodyParts={bodyParts}
+        />
+        <ExerciseFilter
+          setExercises={setExercises}
+          bodyPart={bodyPart}
+          setBodyPart={setBodyPart}
+          bodyParts={bodyParts}
+          equipmentList={equipmentList}
+        />
+        <Exercises
+          exercises={exercises}
+          bodyPart={bodyPart}
+          setBodyPart={setBodyPart}
+          setWorkoutList={setWorkoutList}
+          workoutList={workoutList}
+        />
+      </Box>
+    </div>
   );
 };
 
