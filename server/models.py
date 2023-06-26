@@ -21,8 +21,8 @@ class User(db.Model, SerializerMixin):
     workouts = association_proxy('dailyschedules', 'workout')
     dailyschedules = db.relationship('DailySchedule', backref='user')
 
-    serialize_rules = ('-dailyschedules', 'workouts',
-                       '-workouts.dailyschedules', '-password_hash')
+    serialize_rules = ('-dailyschedules.user', 'workouts',
+                       '-password_hash')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
