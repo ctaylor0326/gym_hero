@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/User";
 
 export default function LoginForm({ openLogin, setOpenLogin }) {
@@ -20,7 +20,7 @@ export default function LoginForm({ openLogin, setOpenLogin }) {
 
     const formData = { email, password };
 
-    fetch("http://127.0.0.1:5555/login", {
+    fetch("/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -31,7 +31,7 @@ export default function LoginForm({ openLogin, setOpenLogin }) {
             setUser(data);
             console.log(user);
             localStorage.setItem("user_id", data.id);
-            navigate("/mainmenu");
+            navigate("/");
           });
         } else {
           response.json().then((data) => {
