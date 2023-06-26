@@ -22,7 +22,7 @@ const NavBar = () => {
 
   return (
     <div>
-      <Button component={Link} to="/mainmenu">
+      <Button component={Link} to="/">
         Main Menu
       </Button>
       <Button component={Link} to="/exercisedisplay">
