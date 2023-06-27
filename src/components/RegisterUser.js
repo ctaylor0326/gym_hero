@@ -20,21 +20,38 @@ export default function RegisterUser({ openRegister, setOpenRegister }) {
 
     const formData = { first_name, last_name, email, password };
 
-    fetch("http://127.0.0.1:5555/register", {
+    fetch("/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     })
-      .then((r) => {
-        if (r.ok) {
-          r.json().then((r) => {
-            setUser(r);
-            localStorage.setItem("user_id", r.id);
-            navigate("/mainmenu");
-          });
+      .then((response) => {
+        if (response.ok) {
+          fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                response.json().then((data) => {
+                  setUser(data);
+                  navigate("/");
+                });
+              } else {
+                console.log("Login failed");
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          console.log("Registration failed");
         }
       })
-      .catch((e) => console.log(e));
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (

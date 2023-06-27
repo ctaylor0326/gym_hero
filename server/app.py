@@ -157,70 +157,96 @@ class DailySchedules(Resource):
             }, 500
 
     def post(self):
-        selections = request.json
+        selection = request.json
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'error': 'User ID not found in session'}, 400
+
+        weekday = selection.get('weekday')
+        workout_id = selection.get('workout_id')
+
         try:
-            new_selections = []
-            for form in selections:
-                daily_schedule = DailySchedule(
-                    user_id=session.get('user_id'),
-                    workout_id=form.get('workout_id'),
-                    weekday=form.get('weekday')
-                )
-                db.session.add(daily_schedule)
-                new_selections.append({
-                    'id': daily_schedule.id,
-                    'user_id': daily_schedule.user_id,
-                    'workout_id': daily_schedule.workout_id,
-                    'weekday': daily_schedule.weekday
-                })
+            existing_schedule = DailySchedule.query.filter_by(
+                user_id=user_id, weekday=weekday).first()
+
+            if existing_schedule:
+                return {'error': f'Daily schedule for "{weekday}" already exists'}, 400
+
+            new_schedule = DailySchedule(
+                user_id=user_id,
+                workout_id=workout_id,
+                weekday=weekday
+            )
+            db.session.add(new_schedule)
             db.session.commit()
 
-            return {
-                'message': 'Daily schedule created successfully',
-                'data': new_selections
-            }, 201
+            return {'message': f'Daily schedule for "{weekday}" created successfully'}
 
         except Exception as e:
             print(e)
-            print(form)
+            return {'error': 'Internal Server Error'}, 500
+
+    def patch(self):
+        user_id = session.get('user_id')
+        if user_id is None:
+            return {
+                'error': 'User ID not found in session'
+            }, 400
+
+        data = request.get_json()
+        weekday = data.get('weekday')
+        workout_id = data.get('workout_id')
+
+        try:
+            daily_schedule = DailySchedule.query.filter_by(
+                user_id=user_id, weekday=weekday).first()
+
+            if daily_schedule:
+                daily_schedule.workout_id = workout_id
+                db.session.commit()
+
+                return {
+                    'message': f'Daily schedule for "{weekday}" updated successfully'
+                }, 200
+            else:
+                return {
+                    'error': f'Daily schedule for "{weekday}" not found'
+                }, 404
+
+        except Exception as e:
+            print(e)
+            return {
+                'error': 'Internal Server Error'
+            }, 500
+
+    def delete(self):
+        user_id = session.get('user_id')
+        if user_id is None:
+            return {
+                'error': 'User ID not found in session'
+            }, 400
+
+        try:
+            data = request.get_json()
+            weekday = data.get('weekday')
+
+            DailySchedule.query.filter_by(
+                user_id=user_id, weekday=weekday).delete()
+
+            db.session.commit()
+
+            return {
+                'message': f'Daily schedule for "{weekday}" deleted successfully'
+            }, 200
+
+        except Exception as e:
+            print(e)
             return {
                 'error': 'Internal Server Error'
             }, 500
 
 
 api.add_resource(DailySchedules, '/dailyschedules', '/selectedworkouts')
-
-# class UserByID(Resource):
-#     def get(self, user_id):
-#         user = User.query.filter_by(id=user_id).first()
-#         if user:
-#             user_data = user.to_dict()
-#             return make_response(jsonify(user_data), 200)
-#         else:
-#             return make_response(jsonify({'message': 'User not found'}), 404)
-
-#     def patch(self, user_id):
-#         user = User.query.filter_by(id=user_id).first()
-#         if user:
-#             data = request.get_json()
-#             for attr in data:
-#                 setattr(user, attr, data[attr])
-#             db.session.add(user)
-#             db.session.commit()
-#             user_dict = user.to_dict()
-#             return make_response(jsonify(user_dict), 200)
-#         else:
-#             return make_response(jsonify({'message': 'User not found'}), 404)
-
-#     def delete(self, user_id):
-#         user = User.query.filter_by(id=user_id).first()
-#         if user:
-#             db.session.delete(user)
-#             db.session.commit()
-#             return make_response('', 204)
-#         else:
-#             return make_response(jsonify({'message': 'User not found'}), 404)
-
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
