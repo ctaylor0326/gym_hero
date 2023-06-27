@@ -18,6 +18,8 @@ const DailyScheduler = () => {
   const [workouts, setWorkouts] = useState([]);
   const [selectedWorkouts, setSelectedWorkouts] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState("");
   const { user } = useContext(UserContext);
   console.log(user);
@@ -33,7 +35,7 @@ const DailyScheduler = () => {
       if (response.ok) {
         const data = await response.json();
         setSelectedWorkouts(data);
-        console.log(selectedWorkouts);
+        setIsLoading(false);
       } else {
         console.error("Error fetching selected workouts:", response.statusText);
       }
@@ -41,6 +43,7 @@ const DailyScheduler = () => {
       console.error("Error fetching selected workouts:", error);
     }
   };
+  console.log(selectedWorkouts);
 
   const handleWorkoutSelection = (day, workoutId) => {
     const existingWorkoutIndex = selectedWorkouts.findIndex(
@@ -69,20 +72,84 @@ const DailyScheduler = () => {
 
   const handleAssignWorkout = async () => {
     try {
-      const response = await fetch("/dailyschedules", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(selectedWorkouts),
-      });
-      if (response.ok) {
-        console.log("Workouts assigned successfully!");
-      } else {
-        console.error("Error assigning workouts:", response.statusText);
+      for (const workout of selectedWorkouts) {
+        const { weekday, workout_id } = workout;
+
+        // Attempt PATCH request to update existing record
+        const patchResponse = await fetch("/dailyschedules", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ weekday, workout_id }),
+        });
+
+        if (patchResponse.ok) {
+          console.log(`Workout for ${weekday} updated successfully.`);
+        } else if (patchResponse.status === 404) {
+          // If no existing record found, attempt POST request
+          const postResponse = await fetch("/dailyschedules", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ weekday, workout_id }),
+          });
+
+          if (postResponse.ok) {
+            console.log(`Workout for ${weekday} assigned successfully.`);
+          } else {
+            console.error(
+              `Error assigning workout for ${weekday}: ${postResponse.statusText}`
+            );
+          }
+        } else {
+          console.error(
+            `Error updating workout for ${weekday}: ${patchResponse.statusText}`
+          );
+        }
       }
     } catch (error) {
       console.error("Error assigning workouts:", error);
+    }
+  };
+
+  const handleClearWorkouts = async () => {
+    setIsDeleting(true);
+
+    try {
+      const weekdays = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
+
+      for (const weekday of weekdays) {
+        const response = await fetch("/dailyschedules", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ weekday }),
+        });
+
+        if (!response.ok) {
+          console.error(
+            `Error deleting workouts for ${weekday}:`,
+            response.statusText
+          );
+        }
+      }
+
+      setSelectedWorkouts([]);
+    } catch (error) {
+      console.error("Error deleting workouts:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -114,6 +181,10 @@ const DailyScheduler = () => {
     setIsPopupOpen(false);
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <NavBar />
@@ -130,40 +201,33 @@ const DailyScheduler = () => {
             "Friday",
             "Saturday",
             "Sunday",
-          ].map((day) => (
-            <Box key={day} display="flex" alignItems="center" mb={2}>
-              <Typography variant="subtitle1" mr={2}>
-                {day}
-              </Typography>
-              <TextField
-                variant="outlined"
-                size="small"
-                value={
-                  selectedWorkouts.find((workout) => workout.weekday === day)
-                    ?.workout_id
-                    ? workouts
-                        .find(
-                          (workout) =>
-                            workout.id ===
-                            selectedWorkouts.find(
-                              (workout) => workout.weekday === day
-                            ).workout_id
-                        )
-                        .workout_name.toUpperCase()
-                    : ""
-                }
-                disabled
-              />
+          ].map((day) => {
+            const selectedWorkout = selectedWorkouts.find(
+              (workout) => workout.weekday === day
+            );
+            const workoutName = selectedWorkout?.workout_name || "";
 
-              <Button
-                variant="outlined"
-                onClick={() => handlePopupOpen(day)}
-                ml={2}
-              >
-                Change
-              </Button>
-            </Box>
-          ))}
+            return (
+              <Box key={day} display="flex" alignItems="center" mb={2}>
+                <Typography variant="subtitle1" mr={2}>
+                  {day}
+                </Typography>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  value={workoutName.toUpperCase()}
+                  disabled
+                />
+                <Button
+                  variant="outlined"
+                  onClick={() => handlePopupOpen(day)}
+                  ml={2}
+                >
+                  Change
+                </Button>
+              </Box>
+            );
+          })}
         </Box>
         <Button
           variant="contained"
@@ -171,6 +235,14 @@ const DailyScheduler = () => {
           onClick={handleAssignWorkout}
         >
           Assign Workouts
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleClearWorkouts}
+          disabled={isDeleting}
+        >
+          Clear Workouts
         </Button>
 
         <Dialog open={isPopupOpen} onClose={handlePopupClose}>
