@@ -16,12 +16,12 @@ import NavBar from "../components/NavBar";
 
 const DailyScheduler = () => {
   const [workouts, setWorkouts] = useState([]);
-  const [selectedWorkouts, setSelectedWorkouts] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState("");
-  const { user } = useContext(UserContext);
+  const { user, selectedWorkouts, setSelectedWorkouts } =
+    useContext(UserContext);
   console.log(user);
 
   useEffect(() => {

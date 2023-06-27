@@ -145,7 +145,8 @@ class DailySchedules(Resource):
                 if workout:
                     selected_workouts.append({
                         'weekday': schedule.weekday,
-                        'workout_name': workout.workout_name
+                        'workout_name': workout.workout_name,
+                        'workout_id': workout.id
                     })
 
             return selected_workouts, 200
