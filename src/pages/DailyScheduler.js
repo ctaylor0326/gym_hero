@@ -18,12 +18,29 @@ const DailyScheduler = () => {
   const [workouts, setWorkouts] = useState([]);
   const [selectedWorkouts, setSelectedWorkouts] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedDay, setSelectedDay] = useState("");
   const { user } = useContext(UserContext);
   console.log(user);
 
   useEffect(() => {
     fetchWorkouts();
+    fetchSelectedWorkouts();
   }, []);
+
+  const fetchSelectedWorkouts = async () => {
+    try {
+      const response = await fetch("/selectedworkouts");
+      if (response.ok) {
+        const data = await response.json();
+        setSelectedWorkouts(data);
+        console.log(selectedWorkouts);
+      } else {
+        console.error("Error fetching selected workouts:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching selected workouts:", error);
+    }
+  };
 
   const handleWorkoutSelection = (day, workoutId) => {
     const existingWorkoutIndex = selectedWorkouts.findIndex(
@@ -88,7 +105,8 @@ const DailyScheduler = () => {
     }
   };
 
-  const handlePopupOpen = () => {
+  const handlePopupOpen = (day) => {
+    setSelectedDay(day);
     setIsPopupOpen(true);
   };
 
@@ -122,11 +140,26 @@ const DailyScheduler = () => {
                 size="small"
                 value={
                   selectedWorkouts.find((workout) => workout.weekday === day)
-                    ?.workout_id || ""
+                    ?.workout_id
+                    ? workouts
+                        .find(
+                          (workout) =>
+                            workout.id ===
+                            selectedWorkouts.find(
+                              (workout) => workout.weekday === day
+                            ).workout_id
+                        )
+                        .workout_name.toUpperCase()
+                    : ""
                 }
                 disabled
               />
-              <Button variant="outlined" onClick={handlePopupOpen} ml={2}>
+
+              <Button
+                variant="outlined"
+                onClick={() => handlePopupOpen(day)}
+                ml={2}
+              >
                 Change
               </Button>
             </Box>
@@ -153,7 +186,13 @@ const DailyScheduler = () => {
             </Box>
             {/* Display the fetched workouts here */}
             {workouts.map((workout) => (
-              <Typography key={workout.id}>{workout.workout_name}</Typography>
+              <Button
+                key={workout.id}
+                variant="outlined"
+                onClick={() => handleWorkoutSelection(selectedDay, workout.id)}
+              >
+                {workout.workout_name}
+              </Button>
             ))}
           </DialogContent>
           <DialogActions>

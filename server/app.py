@@ -118,7 +118,44 @@ class Workouts(Resource):
 api.add_resource(Workouts, '/workouts')
 
 
+class WorkoutsById(Resource):
+    def get(self, id):
+        workout = Workout.query.filter_by(id=id).first().to_dict()
+        return make_response(jsonify(workout), 200)
+
+
+api.add_resource(WorkoutsById, '/workouts/<int:id>')
+
+
 class DailySchedules(Resource):
+    def get(self):
+        user_id = session.get('user_id')
+        if user_id is None:
+            return {
+                'error': 'User ID not found in session'
+            }, 400
+
+        try:
+            daily_schedules = DailySchedule.query.filter_by(
+                user_id=user_id).all()
+
+            selected_workouts = []
+            for schedule in daily_schedules:
+                workout = Workout.query.get(schedule.workout_id)
+                if workout:
+                    selected_workouts.append({
+                        'weekday': schedule.weekday,
+                        'workout_name': workout.workout_name
+                    })
+
+            return selected_workouts, 200
+
+        except Exception as e:
+            print(e)
+            return {
+                'error': 'Internal Server Error'
+            }, 500
+
     def post(self):
         selections = request.json
         try:
@@ -151,7 +188,7 @@ class DailySchedules(Resource):
             }, 500
 
 
-api.add_resource(DailySchedules, '/dailyschedules')
+api.add_resource(DailySchedules, '/dailyschedules', '/selectedworkouts')
 
 # class UserByID(Resource):
 #     def get(self, user_id):
