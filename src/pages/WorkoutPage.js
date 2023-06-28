@@ -12,19 +12,41 @@ const WorkoutPage = () => {
   const [currentExerciseData, setCurrentExerciseData] = useState(null);
 
   useEffect(() => {
-    fetchCurrentWorkout();
-  }, []);
+    console.log("Selected workouts:", selectedWorkouts);
+    if (selectedWorkouts && selectedWorkouts.length > 0) {
+      fetchCurrentWorkout();
+    } else {
+      const fetchSelectedWorkouts = async () => {
+        try {
+          const response = await fetch("/selectedworkouts");
+          if (response.ok) {
+            const data = await response.json();
+            setSelectedWorkouts(data);
+          } else {
+            console.error(
+              "Error fetching selected workouts:",
+              response.statusText
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching selected workouts:", error);
+        }
+      };
+      fetchSelectedWorkouts();
+      console.log("Fetching selected workouts...");
+    }
+  }, [setSelectedWorkouts]);
 
   useEffect(() => {
     if (currentWorkout) {
       fetchExerciseData();
     }
-  }, [currentWorkout]);
+  }, [currentWorkout, currentExerciseIndex]);
 
   const fetchCurrentWorkout = async () => {
     try {
       const currentDay = getCurrentDayOfWeek();
-      const workout = selectedWorkouts.find((w) => w.weekday === currentDay);
+      const workout = selectedWorkouts?.find((w) => w.weekday === currentDay);
 
       if (workout) {
         const response = await fetch(`/workouts/${workout.workout_id}`);
@@ -32,7 +54,8 @@ const WorkoutPage = () => {
           const data = await response.json();
           const exercises = data.exercises
             .split(",")
-            .map((exercise) => parseInt(exercise.trim(), 10));
+            .map((exercise) => exercise.trim());
+
           setCurrentWorkout({ ...data, exercises });
         } else {
           console.error("Error fetching workout:", response.statusText);
@@ -47,14 +70,16 @@ const WorkoutPage = () => {
 
   const fetchExerciseData = async () => {
     const currentExerciseId = currentWorkout.exercises[currentExerciseIndex];
-    console.log(currentExerciseId);
+    console.log("Fetching exercise data for ID:", currentExerciseId);
     try {
       const response = await fetch(
         `https://exercisedb.p.rapidapi.com/exercises/exercise/${currentExerciseId}`,
         exerciseOptions
       );
+      console.log("Exercise API Response:", response);
       if (response.ok) {
         const data = await response.json();
+        console.log("Exercise data fetched successfully.", data);
         setCurrentExerciseData(data);
       } else {
         console.error("Error fetching exercise data:", response.statusText);
@@ -83,6 +108,7 @@ const WorkoutPage = () => {
     setCurrentExerciseIndex((prevIndex) =>
       prevIndex === 0 ? numExercises - 1 : prevIndex - 1
     );
+    console.log("Previous Exercise Index:", currentExerciseIndex);
   };
 
   const handleNextExercise = () => {
@@ -90,6 +116,7 @@ const WorkoutPage = () => {
     setCurrentExerciseIndex((prevIndex) =>
       prevIndex === numExercises - 1 ? 0 : prevIndex + 1
     );
+    console.log("Next Exercise Index:", currentExerciseIndex);
   };
 
   if (!currentWorkout || !currentExerciseData) {
