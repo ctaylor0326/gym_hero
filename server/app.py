@@ -3,14 +3,15 @@
 # Standard library imports
 
 # Remote library imports
+from flask import session
 from flask import jsonify, request, make_response, abort, session
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 
 
 # Local imports
 from config import app, db, api
-from models import User, Workout, DailySchedule
+from models import User, Workout, DailySchedule, LoggedExerciseSet
 
 
 class NewUser(Resource):
@@ -248,6 +249,57 @@ class DailySchedules(Resource):
 
 
 api.add_resource(DailySchedules, '/dailyschedules', '/selectedworkouts')
+
+
+class LoggedExerciseResource(Resource):
+    def post(self):
+        user_id = session.get('user_id')
+
+        if not user_id:
+            return {'message': 'User ID not found in session.'}, 401
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('exercise_id', type=str,
+                            required=True, help="Exercise ID is required.")
+        parser.add_argument('exercise_name', type=str,
+                            required=True, help="Exercise name is required.")
+        parser.add_argument('duration', type=int,
+                            required=True, help="Duration is required.")
+        parser.add_argument('reps_completed', type=int, required=True,
+                            help="Number of reps completed is required.")
+        parser.add_argument('weight_used', type=int,
+                            required=True, help="Weight used is required.")
+        parser.add_argument('notes', type=str, required=False)
+        args = parser.parse_args()
+
+        # Validate inputs
+        if args['duration'] <= 0:
+            return {'message': 'Duration must be a positive integer.'}, 400
+
+        if args['reps_completed'] <= 0:
+            return {'message': 'Number of reps completed must be a positive integer.'}, 400
+
+        if args['weight_used'] < 0:
+            return {'message': 'Weight used must be a non-negative integer.'}, 400
+
+        logged_exercise_set = LoggedExerciseSet(
+            user_id=user_id,
+            exercise_id=args['exercise_id'],
+            exercise_name=args['exercise_name'],
+            duration=args['duration'],
+            reps_completed=args['reps_completed'],
+            weight_used=args['weight_used'],
+            notes=args['notes']
+        )
+
+        db.session.add(logged_exercise_set)
+        db.session.commit()
+
+        return {'message': 'Logged exercise set successfully'}, 201
+
+
+api.add_resource(LoggedExerciseResource, '/logged_exercise_sets')
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
