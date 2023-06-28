@@ -54,3 +54,16 @@ class DailySchedule(db.Model, SerializerMixin):
     weekday = db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     workout_id = db.Column(db.Integer, db.ForeignKey('workouts.id'))
+
+
+class LoggedExerciseSet(db.Model, SerializerMixin):
+    __tablename__ = 'loggedexercisesets'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    exercise_id = db.Column(db.String(4))
+    exercise_name = db.Column(db.String(255))
+    duration = db.Column(db.Integer)
+    reps_completed = db.Column(db.Integer)
+    weight_used = db.Column(db.Integer)
+    notes = db.Column(db.Text)
