@@ -24,7 +24,13 @@ const HomePage = () => {
     <Paper
       sx={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: { lg: "35%", sm: "50%", xs: "50%" },
+        backgroundSize: {
+          xl: "65%",
+          lg: "70%",
+          md: "65%",
+          sm: "55%",
+          xs: "40%",
+        },
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         minHeight: "100vh",
@@ -43,6 +49,7 @@ const HomePage = () => {
           fontSize: { lg: "100px", sm: "65px", xs: "30px" },
           fontWeight: "400px",
           color: "orange",
+          mt: 8,
         }}
       >
         Gym Hero
