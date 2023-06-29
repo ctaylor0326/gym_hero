@@ -35,32 +35,38 @@ const ExerciseDisplay = () => {
   }, []);
 
   return (
-    <div style={{ overflowY: "auto", height: "100vh" }}>
+    <div style={{ height: "100vh" }}>
       <NavBar />
       <Box sx={{ display: "flex" }}>
-        <Box sx={{ flexGrow: 1, mr: 4 }}>
-          <SearchExercises
-            setExercises={setExercises}
-            bodyPart={bodyPart}
-            setBodyPart={setBodyPart}
-            bodyParts={bodyParts}
-          />
-          <ExerciseFilter
-            setExercises={setExercises}
-            bodyPart={bodyPart}
-            setBodyPart={setBodyPart}
-            bodyParts={bodyParts}
-            equipmentList={equipmentList}
-          />
-          <Exercises
-            exercises={exercises}
-            bodyPart={bodyPart}
-            setBodyPart={setBodyPart}
-            setWorkoutList={setWorkoutList}
-            workoutList={workoutList}
-          />
+        <Box sx={{ flexGrow: 1, mr: 2, ml: 2, overflowY: "auto" }}>
+          <Box>
+            <SearchExercises
+              setExercises={setExercises}
+              bodyPart={bodyPart}
+              setBodyPart={setBodyPart}
+              bodyParts={bodyParts}
+            />
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <ExerciseFilter
+              setExercises={setExercises}
+              bodyPart={bodyPart}
+              setBodyPart={setBodyPart}
+              bodyParts={bodyParts}
+              equipmentList={equipmentList}
+            />
+          </Box>
+          <Box sx={{ maxHeight: "calc(100vh - 180px)", overflowY: "auto" }}>
+            <Exercises
+              exercises={exercises}
+              bodyPart={bodyPart}
+              setBodyPart={setBodyPart}
+              setWorkoutList={setWorkoutList}
+              workoutList={workoutList}
+            />
+          </Box>
         </Box>
-        <Card sx={{ minWidth: 300, p: 2, position: "sticky", top: "1rem" }}>
+        <Card sx={{ minWidth: 200, p: 2, position: "sticky", top: "1rem" }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
               Workout Builder

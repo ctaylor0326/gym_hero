@@ -26,13 +26,14 @@ const MainMenu = () => {
     <div>
       <NavBar />
       <Grid container spacing={0} sx={{ marginTop: "32px" }}>
-        <Grid item xs={8} lg={8}>
+        <Grid item xs={6} lg={6}>
           <div
             style={{
-              minHeight: "100vh",
+              minHeight: "70vh",
+              maxHeight: "80vh",
               backgroundImage: `url(${backgroundImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
+              backgroundSize: "contain",
+              backgroundPosition: "right",
               backgroundRepeat: "no-repeat",
               display: "flex",
               justifyContent: "center",
@@ -42,10 +43,11 @@ const MainMenu = () => {
             {/* Content for the left column, if needed */}
           </div>
         </Grid>
-        <Grid item xs={4} lg={4}>
+        <Grid item xs={6} lg={6}>
           <div
             style={{
-              minHeight: "100vh",
+              minHeight: "70vh",
+              maxHeight: "80vh",
               borderLeft: "5px solid red",
               paddingLeft: "32px",
               display: "flex",
@@ -54,19 +56,32 @@ const MainMenu = () => {
               alignItems: "flex-start", // Align content to the left
             }}
           >
-            <Typography variant="h4" gutterBottom>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                fontSize: { lg: "50px", md: "40px", sm: "30px", xs: "20px" },
+              }}
+            >
               Welcome Back, {user.first_name}!
             </Typography>
             <div style={{ marginTop: "16px", width: "100%" }}>
               <div style={{ width: "100%" }}>
                 <Button
+                  color="secondary"
                   variant="contained"
                   size="large"
                   onClick={handleStartWorkout}
                   sx={{
-                    width: "100%",
+                    width: { lg: "40%", sm: "65%", xs: "100%" },
                     height: "100%",
                     textAlign: "left",
+                    fontSize: {
+                      lg: "20px",
+                      md: "15px",
+                      sm: "13px",
+                      xs: "10px",
+                    },
                   }}
                 >
                   Start Today's Workout
@@ -76,13 +91,20 @@ const MainMenu = () => {
             <div style={{ marginTop: "16px", width: "100%" }}>
               <div style={{ width: "100%" }}>
                 <Button
+                  color="secondary"
                   variant="contained"
                   size="large"
                   onClick={handleViewSchedule}
                   sx={{
-                    width: "100%",
+                    width: { lg: "50%", sm: "75%", xs: "100%" },
                     height: "100%",
                     textAlign: "left",
+                    fontSize: {
+                      lg: "20px",
+                      md: "15px",
+                      sm: "13px",
+                      xs: "10px",
+                    },
                   }}
                 >
                   View/Edit Workout Schedule
@@ -92,13 +114,20 @@ const MainMenu = () => {
             <div style={{ marginTop: "16px", width: "100%" }}>
               <div style={{ width: "100%" }}>
                 <Button
+                  color="secondary"
                   variant="contained"
                   size="large"
                   onClick={handleBuildWorkout}
                   sx={{
-                    width: "100%",
+                    width: { lg: "40%", sm: "65%", xs: "100%" },
                     height: "100%",
                     textAlign: "left",
+                    fontSize: {
+                      lg: "20px",
+                      md: "15px",
+                      sm: "13px",
+                      xs: "10px",
+                    },
                   }}
                 >
                   Build New Workout

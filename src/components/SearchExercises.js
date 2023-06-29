@@ -23,21 +23,20 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
   };
 
   return (
-    <Stack alignItems="center" mt="37px" justifyContent="center" p="20px">
+    <Stack alignItems="center" mt="20px" justifyContent="center" p="20px">
       <Typography
         fontWeight={700}
-        sx={{ fontSize: { lg: "44px", xs: "30px" } }}
-        mb="50px"
+        sx={{ fontSize: { lg: "44px", md: "38px", sm: "30px", xs: "20px" } }}
+        mb="20px"
         textAlign="center"
       >
-        Browse Exercises Below <br />
-        And Build Your Own Workout
+        Build Your Own Workout
       </Typography>
-      <Box position="relative" mb="72px">
+      <Box position="relative" mb="20px">
         <TextField
           sx={{
             input: { fontWeight: "700", border: "none", borderRadius: "4px" },
-            width: { lg: "800px", xs: "350px" },
+            width: { lg: "800px", md: "600px", sm: "500px", xs: "150px" },
             backgroundColor: "#fff",
             borderRadius: "40px",
           }}
@@ -48,12 +47,13 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
           type="text"
         />
         <Button
-          className="search-btn"
+          variant="contained"
+          color="secondary"
           sx={{
-            bgcolor: "#FF2625",
+            bgcolor: "secondary",
             color: "#FFF",
             textTransform: "none",
-            width: { lg: "175px", xs: "80px" },
+            width: { lg: "175px", sm: "100px", xs: "50px" },
             fontSize: { lg: "20px", xs: "14px" },
             height: "56px",
             position: "absolute",
