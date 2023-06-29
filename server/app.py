@@ -88,7 +88,7 @@ class LoginResource(Resource):
             return response
         else:
             # Invalid credentials
-            response_data = {'message': 'Invalid email or password'}
+            response_data = {'error': 'Invalid email or password'}
             response = make_response(jsonify(response_data))
             response.status_code = 401
             return response
