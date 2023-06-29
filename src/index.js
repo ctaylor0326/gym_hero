@@ -1,17 +1,25 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
+import ReactDOM from "react-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserProvider } from "./context/User";
 import { BrowserRouter as Router } from "react-router-dom";
+import { themeOptions } from "./styles/themeOptions";
+import "./index.css";
+import App from "./App";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+// Create the MUI theme using themeOptions
+const theme = createTheme(themeOptions);
+
+ReactDOM.render(
   <React.StrictMode>
-    <UserProvider>
-      <Router>
-        <App />
-      </Router>
-    </UserProvider>
-  </React.StrictMode>
+    {/* Wrap your app with the ThemeProvider */}
+    <ThemeProvider theme={theme}>
+      <UserProvider>
+        <Router>
+          <App />
+        </Router>
+      </UserProvider>
+    </ThemeProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
 );

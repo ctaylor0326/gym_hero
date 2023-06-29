@@ -7,6 +7,7 @@ from flask import session
 from flask import jsonify, request, make_response, abort, session
 from flask_restful import Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
+import re
 
 
 # Local imports
@@ -17,12 +18,44 @@ from models import User, Workout, DailySchedule, LoggedExerciseSet
 class NewUser(Resource):
     def post(self):
         form = request.json
+        first_name = form.get('first_name')
+        last_name = form.get('last_name')
+        email = form.get('email')
+        password = form.get('password')
+
+        # Input Validation
+        if not first_name or not first_name.strip():
+            abort(400, {'error': 'First name is required.'})
+
+        if not last_name or not last_name.strip():
+            abort(400, {'error': 'Last name is required.'})
+
+        if not email or not email.strip():
+            abort(400, {'error': 'Email is required.'})
+
+        if not password or not password.strip():
+            abort(400, {'error': 'Password is required.'})
+
+        # Email Format Validation
+        email_pattern = r'^[\w.-]+@[\w.-]+\.\w+$'
+        if not re.match(email_pattern, email):
+            abort(400, {'error': 'Invalid email address.'})
+
+        # Unique Email Validation
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            abort(409, {'error': 'Email address is already registered.'})
+
+        # Password Complexity Validation
+        # Add your own password complexity rules here
+
         new_user = User(
-            first_name=form.get('first_name'),
-            last_name=form.get('last_name'),
-            email=form.get('email'),
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
         )
-        new_user.set_password(form.get('password'))
+        new_user.set_password(password)
+
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -30,7 +63,7 @@ class NewUser(Resource):
             return user_dict, 201
         except Exception as e:
             print(e)
-            return abort(500, {"error": "Internal Server Error"})
+            abort(500, {'error': 'Internal Server Error'})
 
 
 api.add_resource(NewUser, '/register')
@@ -55,7 +88,7 @@ class LoginResource(Resource):
             return response
         else:
             # Invalid credentials
-            response_data = {'message': 'Invalid email or password'}
+            response_data = {'error': 'Invalid email or password'}
             response = make_response(jsonify(response_data))
             response.status_code = 401
             return response

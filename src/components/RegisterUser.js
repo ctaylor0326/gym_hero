@@ -46,7 +46,9 @@ export default function RegisterUser({ openRegister, setOpenRegister }) {
               console.log(error);
             });
         } else {
-          console.log("Registration failed");
+          response.json().then((data) => {
+            alert(data.message.error);
+          });
         }
       })
       .catch((error) => {
