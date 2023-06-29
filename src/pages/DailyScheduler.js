@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import {
   Box,
   Button,
+  Grid,
   MenuItem,
   Select,
   Typography,
@@ -13,6 +14,7 @@ import {
 } from "@mui/material";
 import { UserContext } from "../context/User";
 import NavBar from "../components/NavBar";
+import backgroundImage from "../assets/BannerImage.png";
 
 const DailyScheduler = () => {
   const [workouts, setWorkouts] = useState([]);
@@ -188,94 +190,106 @@ const DailyScheduler = () => {
   return (
     <div>
       <NavBar />
-      <Box>
-        <Typography variant="h5" gutterBottom>
-          Daily Scheduler
-        </Typography>
-        <Box display="flex" flexDirection="column">
-          {[
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-          ].map((day) => {
-            const selectedWorkout = selectedWorkouts.find(
-              (workout) => workout.weekday === day
-            );
-            const workoutName = selectedWorkout
-              ? workouts.find(
-                  (workout) => workout.id === selectedWorkout.workout_id
-                )?.workout_name || ""
-              : selectedWorkout?.workout_name || "";
+      <Grid container spacing={0} sx={{ marginTop: "32px" }}>
+        <Grid item xs={6} md={6}>
+          <div
+            style={{
+              minHeight: "70vh",
+              maxHeight: "80vh",
+              borderRight: "5px solid red",
+              paddingLeft: "32px",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Box p={2}>
+              <Typography variant="h5" gutterBottom textAlign={"right"}>
+                Daily Scheduler
+              </Typography>
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="flex-end"
+                alignItems="flex-end"
+              >
+                {[
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday",
+                ].map((day) => {
+                  const selectedWorkout = selectedWorkouts.find(
+                    (workout) => workout.weekday === day
+                  );
+                  const workoutName = selectedWorkout
+                    ? workouts.find(
+                        (workout) => workout.id === selectedWorkout.workout_id
+                      )?.workout_name || ""
+                    : selectedWorkout?.workout_name || "";
 
-            return (
-              <Box key={day} display="flex" alignItems="center" mb={2}>
-                <Typography variant="subtitle1" mr={2}>
-                  {day}
-                </Typography>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  value={workoutName.toUpperCase()}
-                  disabled
-                />
-                <Button
-                  variant="outlined"
-                  onClick={() => handlePopupOpen(day)}
-                  ml={2}
-                >
-                  Change
-                </Button>
+                  return (
+                    <Box key={day} display="flex" alignItems="center" mb={2}>
+                      <Typography variant="subtitle1" mr={2}>
+                        {day}
+                      </Typography>
+                      <TextField
+                        variant="outlined"
+                        size="small"
+                        value={workoutName.toUpperCase()}
+                        disabled
+                      />
+                      <Button
+                        variant="outlined"
+                        onClick={() => handlePopupOpen(day)}
+                        ml={2}
+                      >
+                        Change
+                      </Button>
+                    </Box>
+                  );
+                })}
               </Box>
-            );
-          })}
-        </Box>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAssignWorkout}
-        >
-          Assign Workouts
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleClearWorkouts}
-          disabled={isDeleting}
-        >
-          Clear Workouts
-        </Button>
-
-        <Dialog open={isPopupOpen} onClose={handlePopupClose}>
-          <DialogTitle>Workout Selector</DialogTitle>
-          <DialogContent>
-            <Box display="flex" justifyContent="center" mb={2}>
-              <Button variant="contained" onClick={() => fetchWorkouts(false)}>
-                All Workouts
+            </Box>
+            <Box ml="auto" p={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAssignWorkout}
+              >
+                Assign Workouts
               </Button>
-              <Button variant="contained" onClick={() => fetchWorkouts(true)}>
-                My Workouts
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleClearWorkouts}
+                disabled={isDeleting}
+              >
+                Clear Workouts
               </Button>
             </Box>
-            {/* Display the fetched workouts here */}
-            {workouts.map((workout) => (
-              <Button
-                key={workout.id}
-                variant="outlined"
-                onClick={() => handleWorkoutSelection(selectedDay, workout.id)}
-              >
-                {workout.workout_name}
-              </Button>
-            ))}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handlePopupClose}>Close</Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+          </div>
+        </Grid>
+        <Grid item xs={6} md={6}>
+          <div
+            style={{
+              minHeight: "70vh",
+              maxHeight: "80vh",
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundSize: "contain",
+              backgroundPosition: "left",
+              backgroundRepeat: "no-repeat",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {/* Content for the right column, if needed */}
+          </div>
+        </Grid>
+      </Grid>
     </div>
   );
 };

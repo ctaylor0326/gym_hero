@@ -22,80 +22,82 @@ const HomePage = () => {
   console.log(user);
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: {
-          xl: "85%",
-          lg: "80%",
-          md: "75%",
-          sm: "65%",
-          xs: "55%",
-        },
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        minHeight: "100vh",
-        minWidth: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "40px",
-        textAlign: "center",
-        paddingBottom: "80px",
-      }}
-    >
-      <Typography
-        variant="h1"
+    <div className="homepage-container">
+      <Paper
+        elevation={0}
         sx={{
-          fontSize: {
-            xl: "120px",
-            lg: "100px",
-            md: "85px",
-            sm: "75px",
-            xs: "60px",
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: {
+            xl: "85%",
+            lg: "80%",
+            md: "75%",
+            sm: "65%",
+            xs: "55%",
           },
-          fontWeight: "700px",
-          color: "orange",
-          mt: 8,
-        }}
-      >
-        Gym Hero
-      </Typography>
-      <Stack
-        direction="row"
-        sx={{
-          backgroundColor: "orangered",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          minHeight: "100vh",
+          minWidth: "100vh",
           display: "flex",
-          width: "50%",
-          height: "10%",
-          justifyContent: "space-around",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "40px",
+          textAlign: "center",
+          paddingBottom: "80px",
         }}
       >
-        <Button
-          onClick={handleOpenLogin}
-          variant="contained"
-          color="primary"
-          sx={{ mt: 1, mb: 1, width: "35%" }}
+        <Typography
+          variant="h1"
+          sx={{
+            fontSize: {
+              xl: "120px",
+              lg: "100px",
+              md: "85px",
+              sm: "75px",
+              xs: "60px",
+            },
+            fontWeight: "700px",
+            color: "orange",
+            mt: 8,
+          }}
         >
-          LOGIN
-        </Button>
-        <LoginForm openLogin={openLogin} setOpenLogin={setOpenLogin} />
-        <Button
-          onClick={handleOpenRegister}
-          variant="contained"
-          color="secondary"
-          sx={{ mt: 1, mb: 1, width: "35%" }}
+          Gym Hero
+        </Typography>
+        <Stack
+          direction="row"
+          sx={{
+            backgroundColor: "orangered",
+            display: "flex",
+            width: "50%",
+            height: "10%",
+            justifyContent: "space-around",
+          }}
         >
-          SIGNUP
-        </Button>
-        <RegisterUser
-          openRegister={openRegister}
-          setOpenRegister={setOpenRegister}
-        />
-      </Stack>
-    </Paper>
+          <Button
+            onClick={handleOpenLogin}
+            variant="contained"
+            color="primary"
+            sx={{ mt: 1, mb: 1, width: "35%" }}
+          >
+            LOGIN
+          </Button>
+          <LoginForm openLogin={openLogin} setOpenLogin={setOpenLogin} />
+          <Button
+            onClick={handleOpenRegister}
+            variant="contained"
+            color="secondary"
+            sx={{ mt: 1, mb: 1, width: "35%" }}
+          >
+            SIGNUP
+          </Button>
+          <RegisterUser
+            openRegister={openRegister}
+            setOpenRegister={setOpenRegister}
+          />
+        </Stack>
+      </Paper>
+    </div>
   );
 };
 

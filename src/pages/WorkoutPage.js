@@ -253,7 +253,11 @@ const WorkoutPage = () => {
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" mt={2}>
-          <Button variant="contained" onClick={handleLogExerciseOpen}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleLogExerciseOpen}
+          >
             Log Exercise
           </Button>
         </Box>
