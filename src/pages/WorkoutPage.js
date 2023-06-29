@@ -16,6 +16,7 @@ import {
 import { UserContext } from "../context/User";
 import NavBar from "../components/NavBar";
 import { exerciseOptions } from "../utils/fetchData";
+import backgroundImage02 from "../assets/BackgroundImage02.png";
 
 const WorkoutPage = () => {
   const [currentWorkout, setCurrentWorkout] = useState(null);
@@ -205,10 +206,36 @@ const WorkoutPage = () => {
     return (
       <div>
         <NavBar />
-        <Box>
-          <Typography variant="h5">
-            No workout is scheduled for today.
-          </Typography>
+        <Box
+          sx={{
+            minHeight: "100vh",
+            backgroundImage: `url(${backgroundImage02})`,
+            backgroundSize: "auto",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            padding: "2rem",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              backgroundColor: "rgba(255, 255, 255, 0.8)", // Adjust opacity here
+              padding: "1rem",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Typography variant="h5" align="center" color="textPrimary" mb={8}>
+              No workout is scheduled for today.
+              <br /> Enjoy your day off!
+            </Typography>
+          </Box>
         </Box>
       </div>
     );
@@ -224,16 +251,26 @@ const WorkoutPage = () => {
     <div>
       <NavBar />
       <Box>
-        <TextField
-          label="Workout"
-          value={`${currentWorkout.weekday}: ${currentWorkout.workout_name}`}
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-        />
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Typography
+            variant="h6"
+            color="secondary"
+            mb={6}
+            mt={3}
+            style={{
+              width: "50%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              padding: "8px",
+              borderRadius: "4px",
+              fontSize: "40px",
+            }}
+          >
+            {`${getCurrentDayOfWeek()}: ${currentWorkout.workout_name}`}
+          </Typography>
+        </Box>
         <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
           <Button variant="contained" onClick={handlePreviousExercise}>
             Previous Exercise
@@ -249,7 +286,7 @@ const WorkoutPage = () => {
             <Typography variant="body1">Equipment: {equipment}</Typography>
           </Box>
           <Box ml={2}>
-            <img src={gifUrl} alt={name} />
+            <img src={gifUrl} alt={name} style={{ maxWidth: "100%" }} />
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" mt={2}>

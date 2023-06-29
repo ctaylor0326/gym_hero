@@ -67,7 +67,6 @@ const HomePage = () => {
         <Stack
           direction="row"
           sx={{
-            backgroundColor: "orangered",
             display: "flex",
             width: "50%",
             height: "10%",
@@ -78,7 +77,12 @@ const HomePage = () => {
             onClick={handleOpenLogin}
             variant="contained"
             color="primary"
-            sx={{ mt: 1, mb: 1, width: "35%" }}
+            sx={{
+              fontSize: { lg: "20px", sm: "18px", xs: "12px" },
+              mt: 1,
+              mb: 1,
+              width: "35%",
+            }}
           >
             LOGIN
           </Button>
@@ -87,7 +91,12 @@ const HomePage = () => {
             onClick={handleOpenRegister}
             variant="contained"
             color="secondary"
-            sx={{ mt: 1, mb: 1, width: "35%" }}
+            sx={{
+              fontSize: { lg: "20px", sm: "18px", xs: "12px" },
+              mt: 1,
+              mb: 1,
+              width: "35%",
+            }}
           >
             SIGNUP
           </Button>

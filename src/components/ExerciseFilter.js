@@ -56,7 +56,7 @@ export default function ExerciseFilter({
 
   return (
     <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
+      <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel id="body-part-filter">Muscle Group</InputLabel>
         <Select
           labelId="body-part-filter"

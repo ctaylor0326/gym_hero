@@ -269,6 +269,40 @@ const DailyScheduler = () => {
               >
                 Clear Workouts
               </Button>
+              <Dialog open={isPopupOpen} onClose={handlePopupClose}>
+                <DialogTitle>Workout Selector</DialogTitle>
+                <DialogContent>
+                  <Box display="flex" justifyContent="center" mb={2}>
+                    <Button
+                      variant="contained"
+                      onClick={() => fetchWorkouts(false)}
+                    >
+                      All Workouts
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => fetchWorkouts(true)}
+                    >
+                      My Workouts
+                    </Button>
+                  </Box>
+                  {/* Display the fetched workouts here */}
+                  {workouts.map((workout) => (
+                    <Button
+                      key={workout.id}
+                      variant="outlined"
+                      onClick={() =>
+                        handleWorkoutSelection(selectedDay, workout.id)
+                      }
+                    >
+                      {workout.workout_name}
+                    </Button>
+                  ))}
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handlePopupClose}>Close</Button>
+                </DialogActions>
+              </Dialog>
             </Box>
           </div>
         </Grid>
