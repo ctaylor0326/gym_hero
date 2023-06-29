@@ -4,6 +4,7 @@ import backgroundImage from "../assets/BannerImage.png";
 import RegisterUser from "../components/RegisterUser";
 import LoginForm from "../components/LoginForm";
 import { UserContext } from "../context/User";
+import "../styles/HomePage.css";
 
 const HomePage = () => {
   const [openRegister, setOpenRegister] = useState(false);
@@ -22,18 +23,20 @@ const HomePage = () => {
 
   return (
     <Paper
+      elevation={0}
       sx={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: {
-          xl: "65%",
-          lg: "70%",
-          md: "65%",
-          sm: "55%",
-          xs: "40%",
+          xl: "85%",
+          lg: "80%",
+          md: "75%",
+          sm: "65%",
+          xs: "55%",
         },
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         minHeight: "100vh",
+        minWidth: "100vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -46,8 +49,14 @@ const HomePage = () => {
       <Typography
         variant="h1"
         sx={{
-          fontSize: { lg: "100px", sm: "65px", xs: "30px" },
-          fontWeight: "400px",
+          fontSize: {
+            xl: "120px",
+            lg: "100px",
+            md: "85px",
+            sm: "75px",
+            xs: "60px",
+          },
+          fontWeight: "700px",
           color: "orange",
           mt: 8,
         }}

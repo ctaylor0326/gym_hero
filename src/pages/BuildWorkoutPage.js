@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
 import Exercises from "../components/Exercises";
 import SearchExercises from "../components/SearchExercises";
 import ExerciseFilter from "../components/ExerciseFilter";
@@ -12,7 +12,6 @@ const ExerciseDisplay = () => {
   const [bodyPart, setBodyPart] = useState("all");
   const [exercises, setExercises] = useState([]);
   const [equipmentList, setEquipmentList] = useState([]);
-  // const [selectedExercise, setSelectedExercise] = useState({});
   const [workoutList, setWorkoutList] = useState([]);
 
   useEffect(() => {
@@ -36,35 +35,42 @@ const ExerciseDisplay = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ overflowY: "auto", height: "100vh" }}>
       <NavBar />
-      <Box>
-        <WorkoutBuilder
-          workoutList={workoutList}
-          setWorkoutList={setWorkoutList}
-          // selectedExercise={selectedExercise}
-          // setSelectedExercise={setSelectedExercise}
-        />
-        <SearchExercises
-          setExercises={setExercises}
-          bodyPart={bodyPart}
-          setBodyPart={setBodyPart}
-          bodyParts={bodyParts}
-        />
-        <ExerciseFilter
-          setExercises={setExercises}
-          bodyPart={bodyPart}
-          setBodyPart={setBodyPart}
-          bodyParts={bodyParts}
-          equipmentList={equipmentList}
-        />
-        <Exercises
-          exercises={exercises}
-          bodyPart={bodyPart}
-          setBodyPart={setBodyPart}
-          setWorkoutList={setWorkoutList}
-          workoutList={workoutList}
-        />
+      <Box sx={{ display: "flex" }}>
+        <Box sx={{ flexGrow: 1, mr: 4 }}>
+          <SearchExercises
+            setExercises={setExercises}
+            bodyPart={bodyPart}
+            setBodyPart={setBodyPart}
+            bodyParts={bodyParts}
+          />
+          <ExerciseFilter
+            setExercises={setExercises}
+            bodyPart={bodyPart}
+            setBodyPart={setBodyPart}
+            bodyParts={bodyParts}
+            equipmentList={equipmentList}
+          />
+          <Exercises
+            exercises={exercises}
+            bodyPart={bodyPart}
+            setBodyPart={setBodyPart}
+            setWorkoutList={setWorkoutList}
+            workoutList={workoutList}
+          />
+        </Box>
+        <Card sx={{ minWidth: 300, p: 2, position: "sticky", top: "1rem" }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Workout Builder
+            </Typography>
+            <WorkoutBuilder
+              workoutList={workoutList}
+              setWorkoutList={setWorkoutList}
+            />
+          </CardContent>
+        </Card>
       </Box>
     </div>
   );
