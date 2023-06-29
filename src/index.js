@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserProvider } from "./context/User";
 import { BrowserRouter as Router } from "react-router-dom";
 import { themeOptions } from "./styles/themeOptions";
-import "./index.css";
 import App from "./App";
 
 // Create the MUI theme using themeOptions

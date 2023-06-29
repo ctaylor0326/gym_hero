@@ -205,7 +205,11 @@ const DailyScheduler = () => {
             const selectedWorkout = selectedWorkouts.find(
               (workout) => workout.weekday === day
             );
-            const workoutName = selectedWorkout?.workout_name || "";
+            const workoutName = selectedWorkout
+              ? workouts.find(
+                  (workout) => workout.id === selectedWorkout.workout_id
+                )?.workout_name || ""
+              : selectedWorkout?.workout_name || "";
 
             return (
               <Box key={day} display="flex" alignItems="center" mb={2}>

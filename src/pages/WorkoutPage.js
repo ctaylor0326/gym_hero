@@ -201,7 +201,20 @@ const WorkoutPage = () => {
     return 0;
   };
 
-  if (!currentWorkout || !currentExerciseData) {
+  if (!currentWorkout) {
+    return (
+      <div>
+        <NavBar />
+        <Box>
+          <Typography variant="h5">
+            No workout is scheduled for today.
+          </Typography>
+        </Box>
+      </div>
+    );
+  }
+
+  if (!currentExerciseData) {
     return null; // Render loading spinner or placeholder while fetching the data
   }
 

@@ -47,7 +47,7 @@ export default function LoginForm({ openLogin, setOpenLogin }) {
 
   return (
     <Dialog open={openLogin} onClose={handleCloseLogin}>
-      <DialogTitle>Login</DialogTitle>
+      <DialogTitle sx={{ textAlign: "center" }}>Login</DialogTitle>
       <TextField
         autoFocus
         margin="dense"
@@ -68,7 +68,7 @@ export default function LoginForm({ openLogin, setOpenLogin }) {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <DialogActions>
+      <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
         <Button onClick={handleCloseLogin}>Cancel</Button>
         <Button onClick={handleLogin}>Login</Button>
       </DialogActions>
